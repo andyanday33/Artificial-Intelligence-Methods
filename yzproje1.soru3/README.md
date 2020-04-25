@@ -1,0 +1,1 @@
+This is a simple game with simple rules. Every move has a point in range (1,1000), 1 means in favor of Computer and 1000 means in favor of User. Computer plays the game by calculating paths to states with minimum points  with minimax algorithm .
