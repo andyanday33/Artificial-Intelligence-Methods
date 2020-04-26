@@ -70,8 +70,22 @@ public class Game {
             }
 
             if(turn == 1){
-                System.out.print("Hamle numarası giriniz: ");
-                int userInput = a.nextInt();
+                boolean emin = false;
+                int userInput = 0;
+                while (emin == false){
+                
+                    System.out.print("Hamle numarası giriniz: ");
+                    userInput = a.nextInt();
+                    System.out.println("Hamlenizden sonra gerçekleşebilecek hamleler:");
+                    for(int j = 0; j < 5; j++){
+                        System.out.println((j + 1) + ": " + possibleMoves[userInput - 1].nextStates[j].point);
+                    }
+                    System.out.println("Emin misiniz?");
+                    String e = a.next();
+                    if(e.equalsIgnoreCase("y") || e.equalsIgnoreCase("e")){
+                        emin = true;
+                    }
+                }
                 currentState = possibleMoves[userInput - 1]; //iterating current state
                 playedStates += userInput;
                 }
@@ -105,6 +119,16 @@ public class Game {
 
         }
         System.out.println("Oyun sonu");
+        System.out.println("Son puan: " + currentState.point);
+        
+        if(currentState.point > 500){
+            System.out.println("Kullanıcı kazandı");
+        }else if(currentState.point == 500){
+            System.out.println("Oyun berabere");
+        }else{
+            System.out.println("Bilgisayar kazandı");
+        }
+        
         System.out.println("Oynanan hamleler: " + playedStates);
         
     }
