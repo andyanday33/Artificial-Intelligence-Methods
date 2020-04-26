@@ -76,7 +76,7 @@ public class Main {
         
         for(int j = 0;j < 20; j++){
             
-            System.out.println("Çözüm 1: ");
+            System.out.println("Çözüm "+ j + ": ");
             System.out.println("Yer değiştirme: " + reportMatrix[j][0] + " Yeniden başlatma: " +
                     reportMatrix[j][1] +
                     " Geçen süre: " + reportMatrix[j][2]);
