@@ -17,35 +17,85 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
-        int h;
-        int moves = 0;
-        int randomRestarts = 0;
-        int[][] reportMatrix = new int[21][3]; //rapor matrisi
-        final int maxTry = 20; //maksimum deneme sayısı
+        long[][] reportMatrix = new long[21][3]; //rapor matrisi
         
-        Queen[] table = randomStart();
+        long gecenSure = 0;
         
-        printState(table);
-        
-        h = findHeuristic(table);
-        System.out.println(h);
-        
-        while(h != 0){
+        for(int i=0; i < 20; i++){
+            int h;
+            int moves = 0;
+            int randomRestarts = 0;
+            long baslangicSuresi = gecenSure;
+            final int maxTry = 20; //maksimum deneme sayısı
             
-            table = nextState(table, moves, randomRestarts);
-            h = findHeuristic(table);
+            Queen[] table = randomStart();
+
             printState(table);
+
+            h = findHeuristic(table);
             System.out.println(h);
-            System.out.println("");
+
+            while(h != 0){
+                int tempH = h;
+                table = nextState(table);
+                h = findHeuristic(table);
+                printState(table);
+                System.out.println("Çakışma sayısı: "+h);
+                System.out.println("");
+                if(h < tempH){
+                    moves++;
+                }else{
+                    randomRestarts++;
+                }
+            }
+
+            System.out.println("Final state");
+
+            printState(table);
+            System.out.println("Çakışma sayısı: "+findHeuristic(table));
+            System.out.println("Vezir oynatma sayısı: "+ moves +" \nRastegele yeniden başlatma sayısı: "+ randomRestarts);
+            reportMatrix[i][0] = moves;
+            reportMatrix[i][1] = randomRestarts;
+            
+            
+            //Zaman hesabı ve daha okunabilir hale çevrilmesi
+            gecenSure = System.nanoTime()- baslangicSuresi;
+            /*String gecenSureStr = String.valueOf(gecenSure);
+            gecenSureStr = gecenSureStr.substring(0,3);
+            gecenSure = Integer.parseInt(gecenSureStr);
+            */
+            reportMatrix[i][2] = gecenSure;
+            
+            System.out.println("geçen süre (nanosaniye) : " + gecenSure);
         }
-        printState(table);
-        System.out.println(findHeuristic(table));
-        System.out.println(moves +" "+ randomRestarts);
+        
+        System.out.println("----Rapor----");
+        long ortYerd = 0;
+        long ortRandomr = 0;
+        long ortSure = 0;
+        
+        for(int j = 0;j < 20; j++){
+            
+            System.out.println("Çözüm 1: ");
+            System.out.println("Yer değiştirme: " + reportMatrix[j][0] + " Yeniden başlatma: " +
+                    reportMatrix[j][1] +
+                    " Geçen süre: " + reportMatrix[j][2]);
+            ortYerd += reportMatrix[j][0];
+            ortRandomr += reportMatrix[j][1];
+            ortSure += reportMatrix[j][2];
+            
+        }
+        long x = 1223543;
+        System.out.println("Ortalamalar:");
+        System.out.println("Yer değiştirme: " + ortYerd/20 +
+                " Yeniden başlatma: " + ortRandomr/20 +
+                " Geçen süre: " + ortSure/20);
+            
+        
         
     }
     
-    public static Queen[] nextState(Queen[] table,int moves,int randomRestarts){
+    public static Queen[] nextState(Queen[] table){
         
         Queen[] maxTable = new Queen[8];
         try{
@@ -88,9 +138,9 @@ public class Main {
         
         if(localMax){ //local max konumundaysak random restart atıyoruz
             maxTable = randomStart();
-            randomRestarts++;
+            
         }
-        moves++;
+       
         return maxTable;
     }
     
